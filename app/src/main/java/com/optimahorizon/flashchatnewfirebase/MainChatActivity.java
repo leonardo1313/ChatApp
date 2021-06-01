@@ -19,6 +19,7 @@ public class MainChatActivity extends AppCompatActivity {
     private EditText mInputText;
     private ImageButton mSendButton;
     private DatabaseReference mDatabaseReference;
+    private ChatListAdapter mListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class MainChatActivity extends AppCompatActivity {
 
 
     private void sendMessage() {
-
+        //Log.d("MESSAGE", "Message sent!");
         // TODO: Grab the text the user typed in and push the message to Firebase
         String input = mInputText.getText().toString();
         if (!input.equals("")) {
@@ -68,13 +69,19 @@ public class MainChatActivity extends AppCompatActivity {
     }
 
     // TODO: Override the onStart() lifecycle method. Setup the adapter here.
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        mListAdapter = new ChatListAdapter(this, mDatabaseReference, mDisplayName);
+        mChatListView.setAdapter(mListAdapter);
+    }
 
     @Override
     public void onStop() {
         super.onStop();
 
         // TODO: Remove the Firebase event listener on the adapter.
+        mListAdapter.cleanup();
 
     }
 
