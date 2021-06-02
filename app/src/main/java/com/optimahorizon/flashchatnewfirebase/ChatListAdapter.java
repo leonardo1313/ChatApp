@@ -3,10 +3,12 @@ package com.optimahorizon.flashchatnewfirebase;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -67,7 +69,9 @@ public class ChatListAdapter extends BaseAdapter {
     static class ViewHolder {
         TextView authorName;
         TextView body;
-        ViewGroup.LayoutParams params;
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
     }
 
     @Override
@@ -86,6 +90,7 @@ public class ChatListAdapter extends BaseAdapter {
         return 0;
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -96,7 +101,7 @@ public class ChatListAdapter extends BaseAdapter {
             final ViewHolder holder = new ViewHolder();
             holder.authorName = convertView.findViewById(R.id.author);
             holder.body = convertView.findViewById(R.id.message);
-            holder.params = holder.authorName.getLayoutParams();
+            holder.params = (LinearLayout.LayoutParams) holder.authorName.getLayoutParams();
             convertView.setTag(holder);
         }
         final InstantMessage message = getItem(position);
@@ -113,14 +118,19 @@ public class ChatListAdapter extends BaseAdapter {
 
         return convertView;
     }
+
     private void setChatRowAppearance(boolean isItMe, ViewHolder holder) {
         if (isItMe) {
-            //holder.params.gravity = Gravity.END;
+            holder.params.gravity = Gravity.END;
             holder.authorName.setTextColor(Color.GREEN);
+            holder.body.setBackgroundResource(R.drawable.bubble2);
         } else {
-            //holder.params.gravity = Gravity.START;
+            holder.params.gravity = Gravity.START;
             holder.authorName.setTextColor(Color.BLUE);
+            holder.body.setBackgroundResource(R.drawable.bubble1);
         }
+        holder.authorName.setLayoutParams(holder.params);
+        holder.body.setLayoutParams(holder.params);
     }
     public void cleanup() {
         mDatabaseReference.removeEventListener(mListener);
